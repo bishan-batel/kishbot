@@ -38,11 +38,11 @@ const cockVarations = [
 	"p\\s*p",
 	"p\\s*e\\s*e\\s*p\\s*e\\s*e",
 	"third\\s*leg",
-	"schmeat",
+  "schmeat",
 ];
 
 export default {
-	token: "NzUwMTMxMzU2NzY3NjE3MDk1.X02ERA.B5v8XW25D-r-hGSWthfzhxTOL_A",
+	token: "NzUwMTMxMzU2NzY3NjE3MDk1.X02ERA.SZXK2JZPlmrpcEIsWMSo4phRdzU",
 	cock: {
 		emoji: {
 			headerName: "yep",
@@ -52,14 +52,14 @@ export default {
 		log: {
 			mainLogDir: "./src/log/count.log",
 			statsDir: "./src/log/tmp/",
-			logIntervalMillis: 60 * 60 * 1000 /* ( 1 hour )*/,
+			logIntervalMillis: 6.9 * 60 * 60 * 1000 /* ( 6.9 hour )*/,
 		},
 		celebration: {
 			interval: 100,
 			message: "I have seen the world 'cock' $c times. 🍤",
 		},
 		dickRegex: new RegExp(
-			cockVarations.reduce((prev, curr) => prev + curr + "|")
+			cockVarations.reduce((prev, curr) => prev + curr + "|") + "cock"
 		),
 	},
 };
