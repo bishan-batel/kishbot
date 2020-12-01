@@ -1,6 +1,7 @@
 import Discord from "discord.js";
 import config from "./config";
 import fs from "fs";
+import { count } from "console";
 
 // Used to locate emojis (ex. 'yep')
 const findEmoji = (
@@ -35,16 +36,17 @@ export const logInterval = () => {
 			.replace(/\//, "_")
 			.replace(/\//, "_")
 			.replace(",", "");
+    const count = getCount();
 
 		fs.writeFileSync(
 			config.cock.log.statsDir + fileName + ".log",
-			`${getCount()}`,
+			`${count}`,
 			{
 				encoding: "utf8",
 				flag: "w",
 			}
 		);
-
+    console.log(`Log file created ${fileName}.log @ ${count}`);
 		setTimeout(onInterval, config.cock.log.logIntervalMillis);
 	};
 
@@ -63,6 +65,7 @@ export const handleCock = (client: Discord.Client, msg: Discord.Message) => {
 	// Reassigns user custom status
 	client.user?.setActivity(`${count} Cocks`, { type: "LISTENING" });
 
+  console.log(`${new Date().toISOString()}::${msg.author.username}@ ${count}`);
 	// If count multiple of 10 it makes a little message
 	if (count % config.cock.celebration.interval == 0)
 		msg.channel.send(config.cock.celebration.message.replace("$c", `${count}`));
