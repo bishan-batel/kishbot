@@ -3,13 +3,13 @@ import Discord, { Client, SystemChannelFlags } from "discord.js";
 import { handleCock, logInterval } from "./cock";
 
 const client = new Client();
+// rofl fasf
 
 // Boots when file first serves
 client.on("ready", () => {
   client.user?.setActivity("Rofl", { type: "LISTENING" });
   logInterval();
-  
-  console.log("<--Ready-->");
+  console.log(`Logged in as ${client.user?.username}`);
 });
 
 client.on("message", (msg) => {
