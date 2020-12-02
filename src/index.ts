@@ -3,7 +3,6 @@ import Discord, { Client, SystemChannelFlags } from "discord.js";
 import { handleCock, logInterval } from "./cock";
 
 const client = new Client();
-// rofl fasf
 
 // Boots when file first serves
 client.on("ready", () => {

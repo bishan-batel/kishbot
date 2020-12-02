@@ -1,7 +1,9 @@
 import Discord from "discord.js";
 import config from "./config";
-import fs from "fs";
-import { count } from "console";
+import firebase, { serverTimestamp } from "./firebase";
+const firestore = firebase.firestore(),
+	countRef = firestore.collection("cock").doc("count"),
+	logsRef = countRef.collection("logs");
 
 // Used to locate emojis (ex. 'yep')
 const findEmoji = (
@@ -14,58 +16,45 @@ const findEmoji = (
 	);
 };
 
-const getCount = (): number => {
-	return parseInt(fs.readFileSync(config.cock.log.mainLogDir).toString());
-};
+const getCount = async (): Promise<number> =>
+	(await countRef.get())?.data()?.current;
 
 // Called whenever cock is detected
-const countTrigger = (): number => {
-	// Gets count, increments, then writes back
-	const count = getCount() + 1;
-	fs.writeFileSync(config.cock.log.mainLogDir, `${count}`);
-
-	// Returns back updated count
+const countTrigger = async (): Promise<number> => {
+	const count = (await getCount()) + 1;
+	countRef.set({ current: count }, { merge: true }); // Reassigns count to be incremenetd
 	return count;
 };
 
 export const logInterval = () => {
-	const onInterval = () => {
-		// Converts date string into something that can be a filename
-		const fileName = new Date()
-			.toLocaleString()
-			.replace(/\//, "_")
-			.replace(/\//, "_")
-			.replace(",", "");
-    const count = getCount();
-
-		fs.writeFileSync(
-			config.cock.log.statsDir + fileName + ".log",
-			`${count}`,
-			{
-				encoding: "utf8",
-				flag: "w",
-			}
-		);
-    console.log(`Log file created ${fileName}.log @ ${count}`);
-		setTimeout(onInterval, config.cock.log.logIntervalMillis);
+	const createLog = async () => {
+		const count = await getCount();
+		logsRef.add({
+			time: serverTimestamp(),
+			count,
+		});
+		setTimeout(createLog, config.cock.log.logIntervalMillis);
 	};
 
-	onInterval();
+	createLog();
 };
 
-export const handleCock = (client: Discord.Client, msg: Discord.Message) => {
+export const handleCock = async (
+	client: Discord.Client,
+	msg: Discord.Message
+) => {
 	// Loops through all emojis and reacts to msg
 	[
 		findEmoji(msg, config.cock.emoji.headerName),
 		...config.cock.emoji.message,
 	].forEach((emoji) => msg.react(emoji));
 
-	const count = countTrigger(); // Calls to rewrite log & get new count
+	const count = await countTrigger(); // Calls to rewrite log & get new count
 
 	// Reassigns user custom status
 	client.user?.setActivity(`${count} Cocks`, { type: "LISTENING" });
 
-  console.log(`${new Date().toISOString()}::${msg.author.username}@ ${count}`);
+	console.log(`${new Date().toISOString()}::${msg.author.username}@ ${count}`);
 	// If count multiple of 10 it makes a little message
 	if (count % config.cock.celebration.interval == 0)
 		msg.channel.send(config.cock.celebration.message.replace("$c", `${count}`));
