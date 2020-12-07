@@ -4,3 +4,4 @@ tmp/
 log/
 *.log
 **/key.json
+**/token.ts
