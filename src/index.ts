@@ -1,4 +1,5 @@
 import config from "./config";
+import token from "./token";
 import Discord, { Client, SystemChannelFlags } from "discord.js";
 import { handleCock, logInterval } from "./cock";
 
@@ -17,4 +18,4 @@ client.on("message", (msg) => {
 	if (msg.content.match(config.cock.dickRegex)) handleCock(client, msg);
 });
 
-client.login(config.token);
+client.login(token);

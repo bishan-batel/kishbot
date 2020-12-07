@@ -42,7 +42,6 @@ const cockVarations = [
 ];
 
 export default {
-	token: "NzUwMTMxMzU2NzY3NjE3MDk1.X02ERA.SZXK2JZPlmrpcEIsWMSo4phRdzU",
 	cock: {
 		emoji: {
 			headerName: "yep",
