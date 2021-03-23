@@ -4,7 +4,7 @@ tmp/
 log/
 *.log
 **/key.json
-**/token.ts
+src/token.ts
 
-**/yarn.lock
-**/package-lock.json
+yarn.lock
+package-lock.json
